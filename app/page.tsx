@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase'
+import {formatCOP} from '@/lib/utils'
 
 export default async function Home() {
   const { data: productos, error } = await supabase
@@ -15,7 +16,7 @@ export default async function Home() {
       <ul>
         {productos?.map((p) => (
           <li key={p.id}>
-            {p.marca} - {p.nombre} - ${p.precio.toLocaleString('es-CO')}
+            {p.marca} - {p.nombre} - {formatCOP(p.precio)}
           </li>
         ))}
       </ul>
