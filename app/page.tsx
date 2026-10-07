@@ -6,7 +6,8 @@ import { Footer } from '@/components/footer'
 import { InstagramIcon } from "@/components/instagram-icon";
 import { WhatsAppButton } from "@/components/whatsapp-button";
 import { CookieBanner } from "@/components/cookie-banner";
- 
+import { ScrollToTopButton } from "@/components/scroll-to-top-button";
+
 export default async function Home() {
   const { data, error } = await supabase
     .from('productos')
@@ -35,7 +36,12 @@ export default async function Home() {
           Botón verde
         </button>
       </div>
-      <Footer /> <WhatsAppButton /> <CookieBanner />
+      <div className="h-[1500px]" />
+      <ScrollToTopButton />
+      <Footer /> 
+      <WhatsAppButton /> 
+      <CookieBanner /> 
+      <ScrollToTopButton />
     </main>
   )
 }
