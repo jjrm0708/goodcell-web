@@ -1,29 +1,27 @@
-import { supabase } from '@/lib/supabase'
-import { formatCOP } from '@/lib/utils'
-import type { Producto } from '@/lib/types'
+import { obtenerCategorias, obtenerProductos } from "@/lib/catalogo";
+import { formatCOP } from "@/lib/utils";
+import { precioEfectivo, textoGarantia } from "@/lib/precios";
 
 export default async function Home() {
-  const { data, error } = await supabase
-    .from('productos')
-    .select('*')
-
-  if (error) {
-    return <pre className="p-8 pt-24">Error: {error.message}</pre>
-  }
-
-  const productos = data as Producto[]
+  const [categorias, productos] = await Promise.all([
+    obtenerCategorias(),
+    obtenerProductos(),
+  ]);
 
   return (
     <div className="p-8 pt-24">
-      <h1 className="mb-4 text-2xl font-bold">Prueba de conexión</h1>
+      <h1 className="mb-2 text-2xl font-bold">Prueba de catálogo</h1>
+      <p className="mb-4 text-app-secondary">
+        Categorías: {categorias.map((c) => c.nombre).join(" · ")}
+      </p>
       <ul>
-        {productos?.map((p) => (
+        {productos.map((p) => (
           <li key={p.id}>
-            {p.marca} - {p.nombre} - {formatCOP(p.precio)}
+            {p.categorias?.nombre} - {p.nombre} - {formatCOP(precioEfectivo(p))}{" "}
+            - Garantía: {textoGarantia(p.garantia_meses)}
           </li>
         ))}
       </ul>
-      <div className="h-[1200px]" />
     </div>
-  )
+  );
 }
