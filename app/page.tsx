@@ -5,7 +5,8 @@ import { ThemeToggle } from '@/components/theme-toggle'
 import { Footer } from '@/components/footer' 
 import { InstagramIcon } from "@/components/instagram-icon";
 import { WhatsAppButton } from "@/components/whatsapp-button";
-
+import { CookieBanner } from "@/components/cookie-banner";
+ 
 export default async function Home() {
   const { data, error } = await supabase
     .from('productos')
@@ -34,7 +35,7 @@ export default async function Home() {
           Botón verde
         </button>
       </div>
-      <Footer /> <WhatsAppButton />
+      <Footer /> <WhatsAppButton /> <CookieBanner />
     </main>
   )
 }
