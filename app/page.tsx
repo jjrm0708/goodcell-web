@@ -2,6 +2,8 @@ import { supabase } from '@/lib/supabase'
 import { formatCOP } from '@/lib/utils'
 import type { Producto } from '@/lib/types'
 import { ThemeToggle } from '@/components/theme-toggle'
+import { Footer } from '@/components/footer' 
+import { InstagramIcon } from "@/components/instagram-icon";
 
 export default async function Home() {
   const { data, error } = await supabase
@@ -31,6 +33,7 @@ export default async function Home() {
           Botón verde
         </button>
       </div>
+      <Footer />
     </main>
   )
 }
