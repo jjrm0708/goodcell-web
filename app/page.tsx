@@ -1,27 +1,16 @@
-import { obtenerCategorias, obtenerProductos } from "@/lib/catalogo";
-import { formatCOP } from "@/lib/utils";
-import { precioEfectivo, textoGarantia } from "@/lib/precios";
+import { obtenerProductos } from "@/lib/catalogo";
+import { ProductCard } from "@/components/product-card";
 
 export default async function Home() {
-  const [categorias, productos] = await Promise.all([
-    obtenerCategorias(),
-    obtenerProductos(),
-  ]);
+  const productos = await obtenerProductos();
 
   return (
-    <div className="p-8 pt-24">
-      <h1 className="mb-2 text-2xl font-bold">Prueba de catálogo</h1>
-      <p className="mb-4 text-app-secondary">
-        Categorías: {categorias.map((c) => c.nombre).join(" · ")}
-      </p>
-      <ul>
-        {productos.map((p) => (
-          <li key={p.id}>
-            {p.categorias?.nombre} - {p.nombre} - {formatCOP(precioEfectivo(p))}{" "}
-            - Garantía: {textoGarantia(p.garantia_meses)}
-          </li>
+    <div className="mx-auto max-w-7xl px-4 pb-16 pt-24 sm:px-6 lg:px-8">
+      <div className="grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-3 lg:grid-cols-4 lg:gap-6">
+        {productos.map((p, i) => (
+          <ProductCard key={p.id} producto={p} indice={i} />
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
