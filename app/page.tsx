@@ -1,12 +1,12 @@
 import { supabase } from '@/lib/supabase'
 import { formatCOP } from '@/lib/utils'
 import type { Producto } from '@/lib/types'
-import { ThemeToggle } from '@/components/theme-toggle'
 import { Footer } from '@/components/footer' 
-import { InstagramIcon } from "@/components/instagram-icon";
-import { WhatsAppButton } from "@/components/whatsapp-button";
-import { CookieBanner } from "@/components/cookie-banner";
-import { ScrollToTopButton } from "@/components/scroll-to-top-button";
+import { InstagramIcon } from "@/components/instagram-icon"
+import { WhatsAppButton } from "@/components/whatsapp-button"
+import { CookieBanner } from "@/components/cookie-banner"
+import { ScrollToTopButton } from "@/components/scroll-to-top-button"
+import { Navbar } from '@/components/navbar'
 
 export default async function Home() {
   const { data, error } = await supabase
@@ -20,8 +20,7 @@ export default async function Home() {
   const productos = data as Producto[]
 
   return (
-    <main className="p-8">
-      <ThemeToggle />
+    <main className="p-8 pt-24">
       <h1 className="mb-4 mt-6 text-2xl font-bold">Prueba de conexión</h1>
       <ul>
         {productos?.map((p) => (
@@ -37,6 +36,7 @@ export default async function Home() {
         </button>
       </div>
       <div className="h-[1500px]" />
+      <Navbar />
       <ScrollToTopButton />
       <Footer /> 
       <WhatsAppButton /> 
