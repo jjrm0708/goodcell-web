@@ -4,6 +4,7 @@ import type { Producto } from '@/lib/types'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { Footer } from '@/components/footer' 
 import { InstagramIcon } from "@/components/instagram-icon";
+import { WhatsAppButton } from "@/components/whatsapp-button";
 
 export default async function Home() {
   const { data, error } = await supabase
@@ -33,7 +34,7 @@ export default async function Home() {
           Botón verde
         </button>
       </div>
-      <Footer />
+      <Footer /> <WhatsAppButton />
     </main>
   )
 }
