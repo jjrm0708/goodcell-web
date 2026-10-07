@@ -1,0 +1,131 @@
+:root {
+  --bg-primary: #f8f9fa;
+  --bg-surface-1: #ffffff;
+  --bg-surface-2: #f1f3f6;
+  --bg-surface-card: #ffffff;
+  --bg-surface-elevated: #e8eaed;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --border-card: rgba(0, 0, 0, 0.08);
+  --border-hover: rgba(0, 0, 0, 0.18);
+  --card-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  --card-shadow-hover: 0 6px 18px rgba(0, 0, 0, 0.06);
+  --accent-color: #4ade80;
+  --accent-hover: #22c55e;
+  --accent-text: #052e16;
+  --accent-subtle: rgba(74, 222, 128, 0.16);
+  --navbar-bg: rgba(255, 255, 255, 0.9);
+  --product-panel-bg: #f0f0f3;
+  --product-panel-border: rgba(0, 0, 0, 0.06);
+}
+
+.dark {
+  --bg-primary: #0a0a0c;
+  --bg-surface-1: #141416;
+  --bg-surface-2: #1c1c20;
+  --bg-surface-card: #141416;
+  --bg-surface-elevated: #222226;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-card: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(255, 255, 255, 0.2);
+  --card-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+  --card-shadow-hover: 0 12px 30px rgba(0, 0, 0, 0.75);
+  --accent-color: #4ade80;
+  --accent-hover: #3ecb72;
+  --accent-text: #000000;
+  --accent-subtle: rgba(74, 222, 128, 0.14);
+  --navbar-bg: rgba(20, 20, 22, 0.85);
+  --product-panel-bg: #f0f0f3;
+  --product-panel-border: rgba(0, 0, 0, 0.06);
+}
+
+:root,
+.dark {
+  --background: var(--bg-primary);
+  --foreground: var(--text-primary);
+  --card: var(--bg-surface-card);
+  --card-foreground: var(--text-primary);
+  --popover: var(--bg-surface-1);
+  --popover-foreground: var(--text-primary);
+  --primary: var(--accent-color);
+  --primary-foreground: var(--accent-text);
+  --secondary: var(--bg-surface-2);
+  --secondary-foreground: var(--text-primary);
+  --muted: var(--bg-surface-2);
+  --muted-foreground: var(--text-secondary);
+  --accent: var(--bg-surface-2);
+  --accent-foreground: var(--text-primary);
+  --destructive: #ef4444;
+  --border: var(--border-subtle);
+  --input: var(--border-card);
+  --ring: var(--accent-color);
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 300ms ease, color 300ms ease;
+  overflow-x: hidden;
+}
+
+.bg-app-primary { background-color: var(--bg-primary); }
+.bg-app-surface-1 { background-color: var(--bg-surface-1); }
+.bg-app-surface-2 { background-color: var(--bg-surface-2); }
+.bg-app-surface-card { background-color: var(--bg-surface-card); }
+.bg-app-surface-elevated { background-color: var(--bg-surface-elevated); }
+.bg-app-navbar { background-color: var(--navbar-bg); }
+
+.text-app-primary { color: var(--text-primary); }
+.text-app-secondary { color: var(--text-secondary); }
+
+.border-app-subtle { border-color: var(--border-subtle); }
+.border-app-card { border-color: var(--border-card); }
+.border-app-hover:hover { border-color: var(--border-hover); }
+
+.bg-app-accent { background-color: var(--accent-color); }
+.bg-app-accent:hover { background-color: var(--accent-hover); }
+.text-app-accent { color: var(--accent-color); }
+.border-app-accent { border-color: var(--accent-color); }
+.text-app-accent-contrast { color: var(--accent-text); }
+.bg-app-accent-subtle { background-color: var(--accent-subtle); }
+
+.product-card {
+  background-color: var(--bg-surface-card);
+  border: 1px solid var(--border-card);
+  box-shadow: var(--card-shadow);
+  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1), border-color 300ms ease;
+}
+.product-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--card-shadow-hover);
+  border-color: var(--border-hover);
+}
+
+.product-media-panel {
+  background-color: var(--product-panel-bg);
+  border: 1px solid var(--product-panel-border);
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up { animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.reveal-on-scroll { animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .product-card:hover { transform: none !important; }
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
