@@ -1,12 +1,6 @@
 import { supabase } from '@/lib/supabase'
 import { formatCOP } from '@/lib/utils'
 import type { Producto } from '@/lib/types'
-import { Footer } from '@/components/footer' 
-import { InstagramIcon } from "@/components/instagram-icon"
-import { WhatsAppButton } from "@/components/whatsapp-button"
-import { CookieBanner } from "@/components/cookie-banner"
-import { ScrollToTopButton } from "@/components/scroll-to-top-button"
-import { Navbar } from '@/components/navbar'
 
 export default async function Home() {
   const { data, error } = await supabase
@@ -14,14 +8,14 @@ export default async function Home() {
     .select('*')
 
   if (error) {
-    return <pre className="p-8">Error: {error.message}</pre>
+    return <pre className="p-8 pt-24">Error: {error.message}</pre>
   }
 
   const productos = data as Producto[]
 
   return (
-    <main className="p-8 pt-24">
-      <h1 className="mb-4 mt-6 text-2xl font-bold">Prueba de conexión</h1>
+    <div className="p-8 pt-24">
+      <h1 className="mb-4 text-2xl font-bold">Prueba de conexión</h1>
       <ul>
         {productos?.map((p) => (
           <li key={p.id}>
@@ -29,19 +23,7 @@ export default async function Home() {
           </li>
         ))}
       </ul>
-      <div className="product-card mt-6 max-w-sm rounded-2xl p-5">
-        <p className="text-app-secondary">Tarjeta de prueba</p>
-        <button className="bg-app-accent text-app-accent-contrast mt-3 rounded-full px-4 py-2 font-semibold">
-          Botón verde
-        </button>
-      </div>
-      <div className="h-[1500px]" />
-      <Navbar />
-      <ScrollToTopButton />
-      <Footer /> 
-      <WhatsAppButton /> 
-      <CookieBanner /> 
-      <ScrollToTopButton />
-    </main>
+      <div className="h-[1200px]" />
+    </div>
   )
 }

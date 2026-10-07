@@ -5,6 +5,11 @@ import "./theme.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import { CartProvider } from "@/components/cart-provider";
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
+import { WhatsAppButton } from "@/components/whatsapp-button";
+import { ScrollToTopButton } from "@/components/scroll-to-top-button";
+import { CookieBanner } from "@/components/cookie-banner";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -40,7 +45,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <CartProvider>{children}</CartProvider>
+          <CartProvider>
+            <Navbar />
+            <main className="w-full flex-1">{children}</main>
+            <WhatsAppButton />
+            <ScrollToTopButton />
+            <Footer />
+            <CookieBanner />
+          </CartProvider>
         </ThemeProvider>
       </body>
     </html>
