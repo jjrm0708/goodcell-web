@@ -5,6 +5,7 @@ export type Categoria = {
   descripcion: string | null
   imagen: string | null
   activo: boolean
+  orden: number
   creado_en: string
 }
 
@@ -17,11 +18,16 @@ export type Producto = {
   descripcion_larga: string | null
   precio: number
   precio_anterior: number | null
+  precio_oferta: number | null
+  oferta_hasta: string | null
   imagen_principal: string | null
   imagenes: string[] | null
   marca: string | null
   modelo: string | null
   stock: number
+  garantia_meses: 3 | 6 | 12 | 24
+  eslogan: string | null
+  especificaciones: string[]
   destacado: boolean
   nuevo: boolean
   activo: boolean
