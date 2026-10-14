@@ -2,6 +2,8 @@ export const SITE = {
   nombre: 'Good Cell',
   titulo: 'Good Cell - Tecnología Premium',
   telefonoVisible: '310 5000800',
+  correoSoporte: null as string | null,
+  correoPrivacidad: null as string | null,
   whatsappNumero: '573105000800',
   instagramUsuario: '@good_cell',
   instagramUrl: 'https://www.instagram.com/good_cell/',
