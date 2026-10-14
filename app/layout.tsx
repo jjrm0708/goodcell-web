@@ -10,6 +10,7 @@ import { Footer } from "@/components/footer";
 import { WhatsAppButton } from "@/components/whatsapp-button";
 import { ScrollToTopButton } from "@/components/scroll-to-top-button";
 import { CookieBanner } from "@/components/cookie-banner";
+import { CartDrawer } from "@/components/cart-drawer";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -52,6 +53,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <ScrollToTopButton />
             <Footer />
             <CookieBanner />
+            <CartDrawer />
           </CartProvider>
         </ThemeProvider>
       </body>
