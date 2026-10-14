@@ -128,3 +128,28 @@
     @apply font-sans;
   }
 }
+
+@utility bg-app-primary { background-color: var(--bg-primary); }
+@utility bg-app-surface-1 { background-color: var(--bg-surface-1); }
+@utility bg-app-surface-2 { background-color: var(--bg-surface-2); }
+@utility bg-app-surface-card { background-color: var(--bg-surface-card); }
+@utility bg-app-surface-elevated { background-color: var(--bg-surface-elevated); }
+@utility bg-app-navbar { background-color: var(--navbar-bg); }
+
+@utility text-app-primary { color: var(--text-primary); }
+@utility text-app-secondary { color: var(--text-secondary); }
+
+@utility border-app-subtle { border-color: var(--border-subtle); }
+@utility border-app-card { border-color: var(--border-card); }
+@utility border-app-hover {
+  &:hover { border-color: var(--border-hover); }
+}
+
+@utility bg-app-accent {
+  background-color: var(--accent-color);
+  &:hover { background-color: var(--accent-hover); }
+}
+@utility text-app-accent { color: var(--accent-color); }
+@utility border-app-accent { border-color: var(--accent-color); }
+@utility text-app-accent-contrast { color: var(--accent-text); }
+@utility bg-app-accent-subtle { background-color: var(--accent-subtle); }
