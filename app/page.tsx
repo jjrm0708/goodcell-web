@@ -4,6 +4,7 @@ import { Hero } from "@/components/hero";
 import { TrustStrip } from "@/components/trust-strip";
 import { CategoryBar } from "@/components/category-bar";
 import { Catalogo } from "@/components/catalogo";
+import { VisitUs } from "@/components/visit-us";
 
 export default async function Home() {
   const [productos, categorias] = await Promise.all([
@@ -20,6 +21,7 @@ export default async function Home() {
         <CategoryBar categorias={categorias} />
         <Catalogo productos={productos} categorias={categorias} />
       </Suspense>
+      <VisitUs />
     </>
   );
 }
