@@ -33,3 +33,19 @@ export async function obtenerCategorias(): Promise<CategoriaBasica[]> {
   }
   return data ?? [];
 }
+
+export async function obtenerProductoPorSlug(
+  slug: string
+): Promise<ProductoConCategoria | null> {
+  const { data, error } = await supabase
+    .from("productos")
+    .select("*, categorias(nombre, slug)")
+    .eq("slug", slug)
+    .eq("activo", true)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`No se pudo cargar el producto: ${error.message}`);
+  }
+  return data as unknown as ProductoConCategoria | null;
+}
