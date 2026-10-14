@@ -4,9 +4,9 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
   useState,
+  useSyncExternalStore,
 } from "react";
 import type { Producto } from "@/lib/types";
 
@@ -27,70 +27,101 @@ type CarritoContexto = {
 const CLAVE = "goodcell_carrito";
 const Contexto = createContext<CarritoContexto | null>(null);
 
+// Almacén del carrito: vive en el navegador (localStorage) y avisa a React cuando cambia
+const oyentes = new Set<() => void>();
+let cache: string | null = null;
+
+function leer(): string {
+  if (cache === null) {
+    try {
+      cache = localStorage.getItem(CLAVE) ?? "[]";
+    } catch {
+      cache = "[]";
+    }
+  }
+  return cache;
+}
+
+function leerItems(): ItemCarrito[] {
+  try {
+    return JSON.parse(leer()) as ItemCarrito[];
+  } catch {
+    return [];
+  }
+}
+
+function escribir(items: ItemCarrito[]) {
+  cache = JSON.stringify(items);
+  try {
+    localStorage.setItem(CLAVE, cache);
+  } catch {
+    // si el navegador bloquea el almacenamiento, el carrito sigue en memoria
+  }
+  oyentes.forEach((avisar) => avisar());
+}
+
+function suscribir(avisar: () => void) {
+  oyentes.add(avisar);
+  const alCambiarOtraPestana = () => {
+    cache = null;
+    avisar();
+  };
+  window.addEventListener("storage", alCambiarOtraPestana);
+  return () => {
+    oyentes.delete(avisar);
+    window.removeEventListener("storage", alCambiarOtraPestana);
+  };
+}
+
 export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [items, setItems] = useState<ItemCarrito[]>([]);
-  const [cargado, setCargado] = useState(false);
+  const crudo = useSyncExternalStore(suscribir, leer, () => "[]");
   const [abierto, setAbierto] = useState(false);
 
-  // Al abrir la página, recupera el carrito guardado en el navegador
-  useEffect(() => {
+  const items = useMemo<ItemCarrito[]>(() => {
     try {
-      const guardado = localStorage.getItem(CLAVE);
-      if (guardado) setItems(JSON.parse(guardado));
+      return JSON.parse(crudo) as ItemCarrito[];
     } catch {
-      // si el navegador bloquea el almacenamiento, empieza vacío
+      return [];
     }
-    setCargado(true);
-  }, []);
-
-  // Cada cambio se guarda (solo después de haber cargado lo anterior)
-  useEffect(() => {
-    if (!cargado) return;
-    try {
-      localStorage.setItem(CLAVE, JSON.stringify(items));
-    } catch {
-      // se ignora
-    }
-  }, [items, cargado]);
+  }, [crudo]);
 
   const agregar = useCallback((producto: Producto, cantidad = 1) => {
     if (producto.stock <= 0) return;
-    setItems((prev) => {
-      const existente = prev.find((i) => i.producto.id === producto.id);
-      if (existente) {
-        return prev.map((i) =>
+    const actuales = leerItems();
+    const existente = actuales.find((i) => i.producto.id === producto.id);
+    if (existente) {
+      escribir(
+        actuales.map((i) =>
           i.producto.id === producto.id
-            ? {
-                ...i,
-                cantidad: Math.min(i.cantidad + cantidad, producto.stock),
-              }
+            ? { ...i, cantidad: Math.min(i.cantidad + cantidad, producto.stock) }
             : i
-        );
-      }
-      return [
-        ...prev,
+        )
+      );
+    } else {
+      escribir([
+        ...actuales,
         { producto, cantidad: Math.min(cantidad, producto.stock) },
-      ];
-    });
+      ]);
+    }
   }, []);
 
   const cambiarCantidad = useCallback((productoId: string, delta: number) => {
-    setItems((prev) =>
-      prev
-        .map((i) => {
-          if (i.producto.id !== productoId) return i;
-          const nueva = Math.min(i.cantidad + delta, i.producto.stock);
-          return { ...i, cantidad: nueva };
-        })
+    escribir(
+      leerItems()
+        .map((i) =>
+          i.producto.id === productoId
+            ? { ...i, cantidad: Math.min(i.cantidad + delta, i.producto.stock) }
+            : i
+        )
         .filter((i) => i.cantidad > 0)
     );
   }, []);
 
   const quitar = useCallback((productoId: string) => {
-    setItems((prev) => prev.filter((i) => i.producto.id !== productoId));
+    escribir(leerItems().filter((i) => i.producto.id !== productoId));
   }, []);
 
-  const vaciar = useCallback(() => setItems([]), []);
+  const vaciar = useCallback(() => escribir([]), []);
   const abrir = useCallback(() => setAbierto(true), []);
   const cerrar = useCallback(() => setAbierto(false), []);
 

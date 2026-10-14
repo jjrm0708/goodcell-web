@@ -6,6 +6,8 @@ import { CategoryBar } from "@/components/category-bar";
 import { Catalogo } from "@/components/catalogo";
 import { VisitUs } from "@/components/visit-us";
 
+export const revalidate = 60;
+
 export default async function Home() {
   const [productos, categorias] = await Promise.all([
     obtenerProductos(),

@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -61,14 +61,16 @@ function NavbarContenido() {
   const searchParams = useSearchParams();
   const { totalUnidades, abrir } = useCarrito();
 
-  const qUrl = searchParams.get("q") ?? "";
+    const qUrl = searchParams.get("q") ?? "";
   const [query, setQuery] = useState(qUrl);
+  const [qPrevio, setQPrevio] = useState(qUrl);
   const [busquedaMovil, setBusquedaMovil] = useState(false);
 
   // Si la URL cambia (por ejemplo "Limpiar filtros"), el campo la sigue
-  useEffect(() => {
+  if (qUrl !== qPrevio) {
+    setQPrevio(qUrl);
     setQuery(qUrl);
-  }, [qUrl]);
+  }
 
   const buscar = (valor: string) => {
     setQuery(valor);
