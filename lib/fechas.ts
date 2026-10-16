@@ -25,3 +25,16 @@ export function formatearFechaPedido(iso: string): string {
   });
   return `${corta}, ${hora}`;
 }
+
+// "6 de octubre de 2026, 14:15"
+export function formatearFechaCompleta(iso: string): string {
+  return new Date(iso).toLocaleString("es-CO", {
+    timeZone: ZONA,
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  });
+}
