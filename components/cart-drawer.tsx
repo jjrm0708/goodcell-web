@@ -22,7 +22,8 @@ import { useCarrito } from "@/components/cart-provider";
 import { ProductPlaceholder } from "@/components/product-placeholder";
 import {
   CLAVE_ULTIMO_PEDIDO,
-  construirPedido,
+  construirMensajeWhatsApp,
+  registrarPedido,
   subtotalCarrito,
   type MetodoEntrega,
 } from "@/lib/pedidos";
@@ -47,6 +48,8 @@ export function CartDrawer() {
   const [ciudad, setCiudad] = useState("");
   const [nombre, setNombre] = useState("");
   const [telefono, setTelefono] = useState("");
+  const [enviando, setEnviando] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!abierto) return;
@@ -67,29 +70,60 @@ export function CartDrawer() {
   const totalUnidades = items.reduce((s, i) => s + i.cantidad, 0);
   const subtotal = subtotalCarrito(items);
 
-  const enviarPedido = () => {
-    if (items.length === 0) return;
-    const { codigo, url } = construirPedido({
-      items,
-      metodo,
-      direccion,
-      ciudad,
-      nombre,
-      telefono,
-    });
+  const validar = (): string | null => {
+    if (nombre.trim().length < 2) return "Escribe tu nombre completo.";
+    const telefonoLimpio = telefono.trim();
+    if (
+      telefonoLimpio.replace(/\D/g, "").length < 7 ||
+      telefonoLimpio.length > 20
+    ) {
+      return "Escribe un teléfono válido.";
+    }
+    if (metodo === "domicilio" && (!direccion.trim() || !ciudad.trim())) {
+      return "Escribe la dirección y la ciudad de entrega.";
+    }
+    return null;
+  };
 
-    try {
-      sessionStorage.setItem(
-        CLAVE_ULTIMO_PEDIDO,
-        JSON.stringify({ codigo, url })
-      );
-    } catch {
-      // si el navegador bloquea el almacenamiento, igual seguimos
+  const enviarPedido = async () => {
+    if (items.length === 0 || enviando) return;
+    const problema = validar();
+    if (problema) {
+      setError(problema);
+      return;
     }
 
-    window.open(url, "_blank");
-    cerrar();
-    router.push("/pedido-enviado");
+    setError(null);
+    setEnviando(true);
+
+    try {
+      const datos = { items, metodo, direccion, ciudad, nombre, telefono };
+      const { codigo, total } = await registrarPedido(datos);
+      const url = construirMensajeWhatsApp(datos, codigo, total);
+
+      try {
+        sessionStorage.setItem(
+          CLAVE_ULTIMO_PEDIDO,
+          JSON.stringify({ codigo, url })
+        );
+      } catch {
+        // si el navegador bloquea el almacenamiento, igual seguimos
+      }
+
+      // Si el navegador bloquea esta pestaña, la página siguiente tiene el botón
+      window.open(url, "_blank");
+      vaciar();
+      cerrar();
+      router.push("/pedido-enviado");
+    } catch (e) {
+      setError(
+        e instanceof Error
+          ? e.message
+          : "No pudimos registrar tu pedido. Intenta de nuevo."
+      );
+    } finally {
+      setEnviando(false);
+    }
   };
 
   return (
@@ -454,14 +488,26 @@ export function CartDrawer() {
                   </div>
                 </div>
 
+                                {error && (
+                  <p
+                    role="alert"
+                    className="rounded-xl border border-red-500/30 bg-red-500/10 p-2.5 text-xs font-medium text-red-500"
+                  >
+                    {error}
+                  </p>
+                )}
+
                 <button
                   type="button"
+                  disabled={enviando}
                   onClick={enviarPedido}
-                  className="flex h-12 min-h-12 w-full cursor-pointer items-center justify-center gap-2.5 whitespace-nowrap rounded-full bg-[#25d366] px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:bg-[#20ba59] active:scale-[0.98] sm:text-base"
+                  className="flex h-12 min-h-12 w-full cursor-pointer items-center justify-center gap-2.5 whitespace-nowrap rounded-full bg-[#25d366] px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:bg-[#20ba59] active:scale-[0.98] disabled:cursor-wait disabled:opacity-70 sm:text-base"
                 >
                   <MessageCircle className="size-5 shrink-0 fill-white stroke-[#25d366]" />
-                  <span>Enviar pedido por WhatsApp</span>
-                  <ArrowRight className="size-4 shrink-0" />
+                  <span>
+                    {enviando ? "Enviando pedido…" : "Enviar pedido por WhatsApp"}
+                  </span>
+                  {!enviando && <ArrowRight className="size-4 shrink-0" />}
                 </button>
 
                 <p className="px-2 text-center text-[11px] leading-tight text-app-secondary">
