@@ -1,11 +1,5 @@
-import type { Metadata } from "next";
-import { AdminApp } from "@/components/admin/admin-app";
-
-export const metadata: Metadata = {
-  title: "Administración | Good Cell",
-  robots: { index: false, follow: false },
-};
+import { ResumenAdmin } from "@/components/admin/resumen-admin";
 
 export default function AdminPage() {
-  return <AdminApp />;
+  return <ResumenAdmin />;
 }
