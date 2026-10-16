@@ -5,6 +5,7 @@ import "./theme.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import { CartProvider } from "@/components/cart-provider";
+import { OcultarEnAdmin } from "@/components/ocultar-en-admin";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { WhatsAppButton } from "@/components/whatsapp-button";
@@ -48,13 +49,17 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <CartProvider>
-            <Navbar />
+            <OcultarEnAdmin>
+              <Navbar />
+            </OcultarEnAdmin>
             <main className="w-full flex-1">{children}</main>
-            <WhatsAppButton />
-            <ScrollToTopButton />
-            <Footer />
-            <CookieBanner />
-            <CartDrawer />
+            <OcultarEnAdmin>
+              <WhatsAppButton />
+              <ScrollToTopButton />
+              <Footer />
+              <CookieBanner />
+              <CartDrawer />
+            </OcultarEnAdmin>
           </CartProvider>
         </ThemeProvider>
       </body>
